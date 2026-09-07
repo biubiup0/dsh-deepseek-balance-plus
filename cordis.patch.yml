@@ -1,0 +1,9 @@
+# dsh-deepseek-balance bundle patch
+#
+# Installed through the official channel:
+#   dsh plugin --profile web add dsh-deepseek-balance
+# The command appends this package to dsh.profile.bundles; the profile boot
+# merges THIS patch (a single `insert` of the plugin row) into the layer stack.
+- insert:
+    - id: deepseek-balance
+      name: 'dsh-deepseek-balance'
