@@ -1,19 +1,21 @@
 {
   "name": "dsh-deepseek-balance",
   "version": "0.1.0",
-  "description": "DeepSeek Harness plugin: live DeepSeek API account balance in the left sidebar with auto refresh and one-click official top-up. 左侧栏常驻 DeepSeek 余额卡片，自动刷新，一键充值。",
+  "description": "DeepSeek Harness (DSH) plugin: live DeepSeek API account balance in the left sidebar footer with auto refresh and one-click official top-up. · 左侧栏底部常驻 DeepSeek 余额，自动刷新，一键跳转官方充值页。",
   "type": "module",
   "main": "lib/index.js",
-  "types": "lib/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./lib/types/index.d.ts",
       "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./client/client.js"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "lib",
+    "client",
     "cordis.patch.yml",
     "README.md",
     "README.zh.md",
@@ -21,6 +23,7 @@
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
+    "prepack": "node scripts/build.mjs",
     "clean": "node -e \"require('node:fs').rmSync('lib',{recursive:true,force:true})\""
   },
   "dsh": {
@@ -29,17 +32,24 @@
     },
     "client": {
       "platform": "web",
-      "inject": [
-        "@deepseek-ai/dsh-client-modules"
-      ]
+      "inject": [],
+      "external": []
     }
   },
   "engines": {
     "node": ">=20"
   },
+  "keywords": [
+    "deepseek",
+    "harness",
+    "dsh",
+    "dsh-plugin",
+    "balance",
+    "usage",
+    "billing"
+  ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "^4.0.2",
-    "@deepseek-ai/dsh-settings": "^0.1.0-rc.7"
+    "@deepseek-ai/cordis": "^4.0.2"
   }
 }

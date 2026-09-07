@@ -1,58 +1,79 @@
 # dsh-deepseek-balance
 
-> DeepSeek Harness（DSH）第三方插件：在左侧栏底部常驻显示 **DeepSeek API 账户余额**，
-> 自动定时刷新，点击展开明细并可一键跳转官方充值页。
+> A DeepSeek Harness (DSH) third-party plugin: shows your DeepSeek API account
+> balance in the **left sidebar footer**, auto-refreshes, and offers a
+> one-click jump to the official top-up page.
 
-[中文](README.zh.md) · English
+[简体中文](README.zh.md) · English
 
-## 功能
+## Features
 
-- **常驻余额卡片**：左侧栏底部显示「¥ 余额 ¥xx.xx」（与网页版用量页同一账户余额）；
-  侧栏收窄成图标条时自动切换为紧凑 ¥ 模式
-- **自动刷新**：每 5 分钟自动查询一次官方接口
+- **Persistent balance pill** in the sidebar footer: `¥ 余额 ¥xx.xx` — the same
+  account balance as the [usage page](https://platform.deepseek.com/usage).
+  Collapses to a compact ¥ badge when the sidebar shrinks to the 56px rail.
+- **Auto refresh** every 5 minutes against the official endpoint
   `GET https://api.deepseek.com/user/balance`
-- **点击展开明细**：每币种总余额 / 其中·赠金、Key 来源（DSH 配置 or 手动）、上次刷新时间
-- **一键充值**：明细面板内置「充值」按钮，直接打开官方充值页
-  `https://platform.deepseek.com/top_up`
-- **零配置复用 Key**：优先复用 DSH 已配置的 `DEEPSEEK_API_KEY`（凭据服务），
-  无需输入任何密钥；读不到时才在面板内提供粘贴入口（仅存内存，不落盘）
+- **Detail panel** on click: total / granted amounts per currency, key source,
+  last update time, manual refresh
+- **One-click top-up**: the panel's `充值` button opens the official
+  `https://platform.deepseek.com/top_up` page in your default browser
+- **Zero-config key reuse**: prefers the DSH-managed `DEEPSEEK_API_KEY`
+  credential — no key input needed. Falls back to a paste box (kept in host
+  memory only) when no configured key exists.
 
-## 安装
+## Install
 
 ```sh
 dsh plugin --profile web add dsh-deepseek-balance
 ```
 
-重启（或热重载）后，左侧栏底部即出现余额胶囊。
+Requires a DSH web/desktop build with the `dsh.client` client-module system
+(the same era as `dshmarket` / `dsh-better-sidebar`).
 
-> 要求：DSH web / desktop 支持 `dsh.client` 客户端模块体系（≥ 0.1.0-rc.6 同类版本）。
+## Security
 
-## 数据与安全说明
+- Reads the official balance endpoint only; the plugin never stores or uploads
+  secrets, and its host routes never return key material.
+- Reuses DSH's own configured credential, or an in-memory manual key.
+- The top-up button opens the official URL in your browser; no third-party hop.
 
-- 余额数据来自 DeepSeek **官方**接口，仅做只读查询；
-- 复用的是 DSH 自身已配置的 API Key（读取自凭据服务的 `DEEPSEEK_API_KEY`），
-  插件不存储、不上传任何密钥；手动粘贴的 Key 仅保存在宿主进程内存中；
-- “充值”按钮调用系统默认浏览器打开官方充值页，不经过任何第三方中转。
+## Build / develop
 
-## 构建 / 开发
+Zero runtime dependencies (peer `@deepseek-ai/cordis` only); nothing to install.
 
 ```sh
-pnpm install
-pnpm build      # 产出 lib/ 与客户端产物
+node scripts/build.mjs   # mirrors src/ -> lib/ (host half); client/client.js is the final bundle
+npm pack                 # publishable tarball (runs prepack)
 ```
 
-源码结构：
+Layout:
 
-- `src/balance-core.js` — 宿主余额查询核心（credential 解析 / subprocess+curl / 汇总）
-- `src/index.js` — 宿主 Cordis 插件入口
-- `src/client/…` — 浏览器端 UI（插槽注册于 `sidebar.footer.action`）
+- `src/balance-core.js` — host balance core (credential resolution / subprocess+curl / summary)
+- `src/index.js` — host Cordis plugin entry (registers `/dsh-balance/*` webServer routes)
+- `client/client.js` — browser bundle (`__ModuleLoader__.load` format) registering the
+  widget into the client slot system (`sidebar.footer.action`)
 
-## 发布到社区市场
+Host routes (same-origin, no secrets returned):
 
-1. 发布 npm 包（`npm publish`，需你的 npm 账号）；
-2. 提交到 [awesome-dsh-plugin](https://awesome-dsh-plugin.com) 精选列表
-   （GitHub：`awesome-dsh-plugin/awesome-dsh-plugin`，分类 `usage · 用量与计费`）；
-3. 收录后 dshmarket 用户即可一键安装。
+| Method | Path                  | Purpose                              |
+| ------ | --------------------- | ------------------------------------ |
+| GET    | `/dsh-balance/state`  | cached snapshot (also warms a fetch) |
+| POST   | `/dsh-balance/refresh`| re-query the official balance API    |
+| POST   | `/dsh-balance/key`    | store an in-memory manual API key    |
+| POST   | `/dsh-balance/topup`  | open the official top-up page        |
+
+## Publish to the community market
+
+1. Publish the npm package (`npm publish` — needs your npm account). Verify the
+   name is free first: `npm view dsh-deepseek-balance version`; pick a unique
+   name (optionally under your scope) if it is taken.
+2. Submit it to the [awesome-dsh-plugin](https://awesome-dsh-plugin.com) curated
+   list (GitHub: `awesome-dsh-plugin/awesome-dsh-plugin`), category `usage ·
+   用量与计费`.
+3. Once listed, dshmarket users can one-click install it.
+
+> Caveat: any marketplace that asks you to paste your DeepSeek API key is a
+> phishing pattern. This plugin only ever reads the DSH-managed credential.
 
 ## License
 
