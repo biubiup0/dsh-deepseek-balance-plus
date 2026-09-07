@@ -1,0 +1,10 @@
+# Submission entry for awesome-dsh-plugin (one file per plugin).
+# Save the content below as:  data/plugins/biubiup0__dsh-deepseek-balance-plus.yml
+# in a PR to https://github.com/awesome-dsh-plugin/awesome-dsh-plugin
+# (repo must be ≥1 day old when the PR is opened — CI enforces this).
+url: https://github.com/biubiup0/dsh-deepseek-balance-plus
+name: biubiup0/dsh-deepseek-balance-plus
+category: usage
+description:
+  en: Live DeepSeek API account balance in the DSH sidebar footer with auto refresh and one-click top-up.
+  zh: 左侧栏底部常驻显示 DeepSeek API 账户余额，自动刷新，并可一键打开官方充值页。

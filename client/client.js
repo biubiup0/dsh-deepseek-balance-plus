@@ -6,11 +6,13 @@
 // injected host bundles. This bundle requires only 'react' (platform seed).
 // module.exports exposes the cordis-style plugin { name, inject, apply }.
 //
-// Behaviour matches the reviewed dynamic prototype:
-//   - persistent pill in sidebar.footer.action (replaces the shipped
-//     'cordis-panel' cell, per user preference), wide/rail variants
-//   - click toggles a details panel (total / granted, key source, refresh)
-//   - 5-minute auto refresh against the host routes under /dsh-balance
+// Final UI (v10, plain text): the footer entry shows content only — no capsule
+// background / border / radius / shadow. Wide sidebar: `余额 ¥23.37`; 56px rail:
+// the amount alone. Clicking opens the detail panel (total / granted, key
+// source, 充值 + 刷新). Auto refresh every 5 minutes against /dsh-balance/*.
+//
+// Registration uses a fresh additive id (keeps the shipped "Cordis Plugin"
+// entry intact). To replace that entry instead, change id to "cordis-panel".
 
 window.__ModuleLoader__.load({ id: "dsh-deepseek-balance-plus", factory: (require) => {
 
@@ -52,7 +54,7 @@ window.__ModuleLoader__.load({ id: "dsh-deepseek-balance-plus", factory: (requir
   function row(k, v, strong) {
     return React.createElement("div", { key: k, style: { display: "flex", justifyContent: "space-between", gap: 8, marginTop: 4 } },
       React.createElement("span", { style: { color: "var(--dsw-alias-label-secondary)" } }, k),
-      React.createElement("span", { style: { fontWeight: strong ? 600 : 400, fontVariantNumeric: "tabular-nums" } }, v));
+      React.createElement("span", { style: { fontWeight: strong ? 600 : 400 } }, v));
   }
 
   function Widget(props) {
@@ -111,17 +113,20 @@ window.__ModuleLoader__.load({ id: "dsh-deepseek-balance-plus", factory: (requir
       : needKey ? "var(--dsw-alias-state-warn-primary)"
       : "var(--dsw-alias-label-primary)";
 
+    // Plain text only: no capsule background / border / radius / shadow.
     var cellStyle = {
-      display: "flex", flexDirection: wide ? "row" : "column", alignItems: "center", justifyContent: "center",
-      gap: wide ? 6 : 3, padding: wide ? "7px 12px" : "5px 0", borderRadius: wide ? 10 : 8,
-      cursor: "pointer", whiteSpace: "nowrap", userSelect: "none", color: cellColor,
-      background: "var(--dsw-alias-bg-layer-1)", border: "1px solid var(--dsw-alias-border-l2)",
-      maxWidth: wide ? 220 : 56, minWidth: wide ? 0 : 54, boxSizing: "border-box",
+      display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center",
+      gap: 6, padding: "2px 4px",
+      cursor: "pointer", whiteSpace: "nowrap", userSelect: "none",
+      background: "transparent", border: "none",
+      boxSizing: "border-box",
+      maxWidth: wide ? 240 : 56, minWidth: wide ? 0 : 56,
     };
-    var valStyle = { fontSize: wide ? 14 : 10, fontWeight: 700, lineHeight: 1.2, fontVariantNumeric: "tabular-nums", overflow: "hidden", textOverflow: "ellipsis" };
-    var railAmtStyle = { fontSize: 10, fontWeight: 700, lineHeight: 1.2, fontVariantNumeric: "tabular-nums", maxWidth: 52, overflow: "hidden", textOverflow: "ellipsis" };
+    var amtStyle = wide
+      ? { fontSize: 14, fontWeight: 700, lineHeight: 1, color: cellColor, overflow: "hidden", textOverflow: "ellipsis" }
+      : { fontSize: 12, fontWeight: 700, lineHeight: 1.2, color: cellColor, maxWidth: 54, overflow: "hidden", textOverflow: "ellipsis" };
     var panelStyle = {
-      position: "fixed", left: 8, bottom: 54, width: 276, zIndex: 3000,
+      position: "fixed", left: 8, bottom: 40, width: 276, zIndex: 3000,
       background: "var(--dsw-alias-bg-overlay)", border: "1px solid var(--dsw-alias-border-l2)",
       borderRadius: 12, boxShadow: "0 8px 28px rgba(0,0,0,.22)", padding: "12px 14px",
       color: "var(--dsw-alias-label-primary)", fontSize: 12.5,
@@ -135,18 +140,17 @@ window.__ModuleLoader__.load({ id: "dsh-deepseek-balance-plus", factory: (requir
       background: "var(--dsw-alias-brand-primary)", color: "#ffffff", cursor: "pointer", fontSize: 12, fontWeight: 600,
     };
 
+    var inner = wide
+      ? React.createElement("div", { style: { display: "flex", alignItems: "baseline", gap: 6, minWidth: 0 } },
+        React.createElement("span", { style: { fontSize: 12.5, fontWeight: 700, color: "var(--dsw-alias-label-secondary)", lineHeight: 1, whiteSpace: "nowrap" } }, "\u4f59\u989d"),
+        React.createElement("span", { style: amtStyle }, cellText))
+      : React.createElement("span", { style: amtStyle, title: headText ? ("DeepSeek \u4f59\u989d " + headText) : cellText }, headText || cellText);
+
     var cell = React.createElement("div", {
       style: cellStyle,
       title: headText ? ("DeepSeek \u4f59\u989d " + headText) : cellText,
       onClick: function () { setOpen(!open); if (needKey) refresh(); },
-    }, wide
-      ? React.createElement("div", { style: { display: "flex", alignItems: "baseline", gap: 6 } },
-        React.createElement("span", { style: { fontSize: 15, fontWeight: 700, color: "var(--dsw-alias-brand-primary)", lineHeight: 1 } }, "\u00a5"),
-        React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: "var(--dsw-alias-label-secondary)", lineHeight: 1 } }, "\u4f59\u989d"),
-        React.createElement("span", { style: valStyle }, cellText))
-      : React.createElement(React.Fragment, null,
-        React.createElement("span", { style: { fontSize: 15, fontWeight: 700, color: "var(--dsw-alias-brand-primary)", lineHeight: 1 } }, "\u00a5"),
-        React.createElement("span", { style: railAmtStyle, title: headText || "" }, headText || cellText)));
+    }, inner);
 
     var panel = null;
     if (open) {
@@ -206,10 +210,6 @@ window.__ModuleLoader__.load({ id: "dsh-deepseek-balance-plus", factory: (requir
     if (!slots) return;
     slots.inject("sidebar.footer.action", function () {
       return slots.register(
-        // A fresh additive id keeps the shipped "Cordis Plugin" entry intact
-        // for other users; a negative order pins this pill at the front so it
-        // is never clipped on wide sidebars. To REPLACE the shipped entry
-        // instead (as the author's own setup does), set id: "cordis-panel".
         { name: "sidebar.footer.action", id: "ds-deepseek-balance", order: -50, label: function () { return "DeepSeek \u4f59\u989d"; } },
         function (props) { return React.createElement(Widget, { wide: !!(props && props.wide) }); },
       );
