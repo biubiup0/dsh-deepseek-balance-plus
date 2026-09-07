@@ -1,5 +1,5 @@
 {
-  "name": "dsh-deepseek-balance",
+  "name": "dsh-deepseek-balance-plus",
   "version": "0.1.0",
   "description": "DeepSeek Harness (DSH) plugin: live DeepSeek API account balance in the left sidebar footer with auto refresh and one-click official top-up. · 左侧栏底部常驻 DeepSeek 余额，自动刷新，一键跳转官方充值页。",
   "type": "module",

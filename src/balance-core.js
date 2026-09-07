@@ -1,5 +1,5 @@
 /**
- * dsh-deepseek-balance — host-side balance core.
+ * dsh-deepseek-balance-plus — host-side balance core.
  *
  * Pure host logic shared by the plugin entry: resolve the DeepSeek API key
  * (DSH-managed credential first, optional in-memory override), query the

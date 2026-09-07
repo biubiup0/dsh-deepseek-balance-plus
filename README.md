@@ -1,4 +1,4 @@
-# dsh-deepseek-balance
+# dsh-deepseek-balance-plus
 
 > A DeepSeek Harness (DSH) third-party plugin: shows your DeepSeek API account
 > balance in the **left sidebar footer**, auto-refreshes, and offers a
@@ -24,7 +24,7 @@
 ## Install
 
 ```sh
-dsh plugin --profile web add dsh-deepseek-balance
+dsh plugin --profile web add dsh-deepseek-balance-plus
 ```
 
 Requires a DSH web/desktop build with the `dsh.client` client-module system
@@ -65,7 +65,7 @@ Host routes (same-origin, no secrets returned):
 ## Publish to the community market
 
 1. Publish the npm package (`npm publish` — needs your npm account). Verify the
-   name is free first: `npm view dsh-deepseek-balance version`; pick a unique
+   name is free first: `npm view dsh-deepseek-balance-plus version`; pick a unique
    name (optionally under your scope) if it is taken.
 2. Submit it to the [awesome-dsh-plugin](https://awesome-dsh-plugin.com) curated
    list (GitHub: `awesome-dsh-plugin/awesome-dsh-plugin`), category `usage ·

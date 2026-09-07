@@ -1,5 +1,5 @@
 /**
- * dsh-deepseek-balance — host entry.
+ * dsh-deepseek-balance-plus — host entry.
  *
  * Registers same-origin HTTP routes (via the `webServer` seam) that bridge
  * the browser widget to the host:

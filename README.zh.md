@@ -1,4 +1,4 @@
-# dsh-deepseek-balance
+# dsh-deepseek-balance-plus
 
 > DeepSeek Harness (DSH) 第三方插件：左侧栏底部常驻显示 DeepSeek API 账户余额，
 > 自动刷新，可一键跳转官方充值页。
@@ -19,7 +19,7 @@
 ## 安装
 
 ```sh
-dsh plugin --profile web add dsh-deepseek-balance
+dsh plugin --profile web add dsh-deepseek-balance-plus
 ```
 
 要求宿主支持 `dsh.client` 客户端模块体系（与 dshmarket / dsh-better-sidebar
@@ -59,7 +59,7 @@ npm pack                  # 打可发布 tarball（自动执行 prepack）
 ## 发布到社区市场
 
 1. 发布 npm 包（`npm publish`，需你的 npm 账号）。先确认包名可用：
-   `npm view dsh-deepseek-balance version`；被占用则换唯一名字（可用 scope）。
+   `npm view dsh-deepseek-balance-plus version`；被占用则换唯一名字（可用 scope）。
 2. 提交到 [awesome-dsh-plugin](https://awesome-dsh-plugin.com) 精选列表
    （GitHub：`awesome-dsh-plugin/awesome-dsh-plugin`），分类 `usage · 用量与计费`。
 3. 收录后 dshmarket 用户即可一键安装。

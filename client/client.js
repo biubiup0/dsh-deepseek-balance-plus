@@ -1,4 +1,4 @@
-// dsh-deepseek-balance — browser client bundle (prebuilt source of truth).
+// dsh-deepseek-balance-plus — browser client bundle (prebuilt source of truth).
 //
 // Format contract of the client module system (@deepseek-ai/dsh-client-modules):
 // the file is loaded through window.__ModuleLoader__.load({ id, factory }); the
@@ -12,7 +12,7 @@
 //   - click toggles a details panel (total / granted, key source, refresh)
 //   - 5-minute auto refresh against the host routes under /dsh-balance
 
-window.__ModuleLoader__.load({ id: "dsh-deepseek-balance", factory: (require) => {
+window.__ModuleLoader__.load({ id: "dsh-deepseek-balance-plus", factory: (require) => {
 
   var module = { exports: {} };
   var exports = module.exports;
