@@ -33,11 +33,12 @@ dsh plugin --profile web add dsh-deepseek-balance-plus
 
 ## 构建 / 开发
 
-零运行时依赖（仅 peer `@deepseek-ai/cordis`），无需安装依赖：
+需要 Node.js 20 及以上（见 `package.json` 的 `engines`）。零运行时依赖（仅 peer `@deepseek-ai/cordis`），无需安装依赖：
 
 ```sh
 node scripts/build.mjs    # 把 src/ 镜像到 lib/（宿主半侧）；client/client.js 即最终浏览器产物
 npm pack                  # 打可发布 tarball（自动执行 prepack）
+npm run clean             # 删除生成的 lib/ 目录
 ```
 
 源码结构：

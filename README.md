@@ -39,11 +39,13 @@ Requires a DSH web/desktop build with the `dsh.client` client-module system
 
 ## Build / develop
 
-Zero runtime dependencies (peer `@deepseek-ai/cordis` only); nothing to install.
+Requires Node.js 20 or newer (see `engines` in `package.json`). Zero runtime
+dependencies (peer `@deepseek-ai/cordis` only); nothing to install.
 
 ```sh
 node scripts/build.mjs   # mirrors src/ -> lib/ (host half); client/client.js is the final bundle
 npm pack                 # publishable tarball (runs prepack)
+npm run clean            # remove the generated lib/ directory
 ```
 
 Layout:
